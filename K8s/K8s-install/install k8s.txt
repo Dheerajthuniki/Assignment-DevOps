@@ -1,0 +1,53 @@
+Install on master and worker nodes
+Docker  –  is a software responsible for running the containers.
+kubeadm – a CLI tool that will install and configure the various components of a cluster in a standard way.
+kubelet – a system service/program that runs on all nodes and handles node-level operations.
+kubectl – a CLI tool used for issuing commands to the cluster through its API Server.
+Run on master and nodes
+1.	$ apt-get update && apt-get install -y docker.io
+2.	$ vi /etc/docker/daemon.json
+
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+
+3.	systemctl enable docker
+ systemctl daemon-reload
+ systemctl restart docker
+ systemctl status docker
+
+4.	$ apt-get update && apt-get install -y apt-transport-https
+5.	$ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+6.	
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+ deb https://apt.kubernetes.io/ kubernetes-xenial main
+ EOF
+7.	$ apt-get update
+8.	$ apt-get install -y kubelet kubeadm kubectl
+9.	$ apt-mark hold kubelet kubeadm kubectl
+
+Create kubernetes cluster (Run on  Master)
+1.	$ kubeadm init
+2.	Save ‘kubadm join’  
+     (use the command “$ kubeadm token create --print-join-command”  to regenerate kubeadm token)
+3.	$ cp /etc/kubernetes/admin.conf $HOME/ 
+4.	 $ chown $(id -u):$(id -g) $HOME/admin.conf
+5.	 $ export KUBECONFIG=$HOME/admin.conf
+Join Worker Nodes to the Kubernetes Cluster (Run on worker node)
+1.	Run ‘kubadm join’ command.
+Testing the Kubernetes Cluster(Run on Master)
+1.	$ kubectl get nodes
+2.	$ kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')
+3.	$ kubectl get nodes
+4.	kubectl get pods -n kube-system
+
+Run following commands if ‘kubectl apply’ fails..
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
