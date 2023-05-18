@@ -1,0 +1,39 @@
+pipeline {
+    agent {
+        node{
+            label 'labels1'
+        }
+    }
+    stages {
+      //  stage('Prepare Workspace') {
+      //steps {
+        //cleanWs()  // Clean workspace before starting the pipeline
+      //}
+    //}
+        stage('Checkout') {
+            steps {
+               checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://dheerajthuniki@bitbucket.org/devopsnew123/final-poc-latest.git']])
+            }
+        }
+        stage('npm install') {
+            steps {
+               sh 'cd MongoDBAngular13 && npm install'
+            }
+        }
+        stage('npm build') {
+            steps {
+               sh 'cd MongoDBAngular13 && npm run build'
+            }
+        }
+        stage('npm test') {
+            steps {
+               sh 'cd MongoDBAngular13 && npm test'
+            }
+        }
+        stage('docker build') {
+            steps {
+               sh 'cd MongoDBAngular13 && sudo docker build -t pocimage .'
+            }
+        }
+    }
+}

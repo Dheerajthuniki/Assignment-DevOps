@@ -1,0 +1,34 @@
+pipeline {
+    agent {
+        node{
+            label 'labels1'
+        }
+    }
+
+    stages {
+        stage('checkout') {
+            steps {
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'private-github', url: 'https://github.com/Dheerajthuniki/amazona2-app.git']])
+            }
+        }
+        stage('build'){
+              steps{
+              sh 'cd frontend && npm install'
+               sh 'cd backend && npm install'
+              }
+            }
+        stage('terraform'){
+            steps{
+                sh 'cd terraform && terraform workspace select prod'
+                sh 'cd terraform && terraform init'
+                sh 'cd terraform && terraform apply -auto-approve --var-file prod.tfvars'
+            }
+        }
+          
+        stage('ansible-playbook'){
+            steps{
+                sh 'cd ansible &&  sudo ansible-playbook -i /opt/ansible/inventory/aws_ec2.yaml newmaster.yml '
+            }
+        }
+    }
+}
