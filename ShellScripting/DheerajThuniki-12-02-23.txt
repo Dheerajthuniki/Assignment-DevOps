@@ -1,0 +1,344 @@
+Name: DheerajThuniki; EMp ID:MLI1192 ; Date: 12/02/23
+===============================================================================================================================================================================================
+              ANSWERS 
+             =========
+
+1.Write a shell script to list all of the directory files in a directory?
+
+#! /bin/bash
+echo -e "enter directory name:\c"
+read dir
+if [ -d $dir ]
+then
+echo "list of files in directory"
+cd $dir
+ls -la
+else 
+ echo"No directory is present in that name"
+ fi
+
+output
+=======
+enter directory name:dir1
+list of files in directory
+total 16
+drwxr-xr-x 4 root root 4096 Feb 18 13:20 .
+drwxr-xr-x 6 root root 4096 Feb 16 23:02 ..
+drwxr-xr-x 2 root root 4096 Feb 15 11:57 dir2
+drwxr-xr-x 2 root root 4096 Feb 18 13:16 dir3
+-rw-r--r-- 1 root root    0 Feb 18 13:20 file1
+-rw-r--r-- 1 root root    0 Feb 18 13:20 file2
+-rw-r--r-- 1 root root    0 Feb 18 13:20 file3
+-rw-r--r-- 1 root root    0 Feb 18 13:20 file4
+======================================================================================================================================================================
+2.Write a simple script to install any tomcat server?
+
+#!/bin/bash
+echo -e "enter required tomcat veersion:\c"
+read req_tom_ver
+tom_m_v=$(echo $req_tom_ver|cut -c 1)
+url="https://archive.apache.org/dist/tomcat/tomcat-${tom_m_v}/v${req_tom_ver}/bin/apache-tomcat-${req_tom_ver}.tar.gz"
+sudo wget $url
+sudo tar -xvzf apache-tomcat-${req_tom_ver}.tar.gz
+mv apache-tomcat-${req_tom_ver} tomcat${tom_m_v}
+rm -rf apache-tomcat-${req_tom_ver}.tar.gz
+
+output
+==========
+enter required tomcat veersion:8.5.85
+[sudo] password for vboxuser: 
+\\--2023-02-18 14:16:56--  https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.85/bin/apache-tomcat-8.5.85.tar.gz
+Resolving archive.apache.org (archive.apache.org)... 138.201.131.134, 2a01:4f8:172:2ec5::2
+Connecting to archive.apache.org (archive.apache.org)|138.201.131.134|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 10633461 (10M) [application/x-gzip]
+Saving to: ‘apache-tomcat-8.5.85.tar.gz.2’
+
+apache-tomcat-8.5.85.tar.gz.2 100%[===============================================>]  10.14M   169KB/s    in 90s     
+
+2023-02-18 14:18:28 (115 KB/s) - ‘apache-tomcat-8.5.85.tar.gz.2’ saved [10633461/10633461]
+
+=========================================================================================================================================================================
+
+3. write a shell script using arithmetic operators for adding, multiplication and subtraction of any two numbers?
+
+#! /bin/bash
+echo "Artematic Operations"
+echo "enter values"
+read num1
+read num2
+c=`expr $num1 + $num2`
+d=`expr $num1 - $num2`
+e=`expr $num1 \* $num2`
+echo $c
+echo $d
+echo $e
+
+output
+========
+Artematic Operations
+enter values
+6
+5
+11
+1
+30
+
+========================================================================================================================================================================
+
+4. This example script prompts the user to enter a month and outputs the number of days. There are three possible answers: 30 days, 31 days, 28 or 29 days for February.
+
+#! /bin/bash
+echo -e "Enter the name of a month:\c" 
+read month 
+case $month in 
+  February) 
+
+echo "There are 28/29 days in $month.";; 
+
+  April | June | September | November) 
+
+echo "There are 30 days in $month.";; 
+
+  January | March | May | July | August | October | December) 
+
+echo "There are 31 days in $month.";; 
+
+  *) 
+
+echo "Unknown month. Please check if you entered the correct month name: $month";; 
+
+esac 
+
+
+output
+==========
+Enter the name of a month:July
+There are 31 days in July.
+===========================================================================================================================================================================
+
+5..The script prompts the user to enter the path to the CSV file.
+   Validate the file if its not CSV the script should terminate
+   The script prompts the user to enter an age range (e.g., "18-25") to filter the results. 
+   If not in given range expression  script should prompt to enter with an example to enter the rangeThe script reads the CSV file and extracts the following information for each user
+    a. First name          b. Last name          c. Email address          d. Age      
+   script displays the user data for all users whose age falls within the specified range. 
+
+#! /bin/bash
+
+echo -e "enter file name:\c"
+read file
+if [ -f $file ]
+then 
+    echo "$file is present"
+else
+    echo "$file is not present"
+   exit
+fi
+echo -e  "enter lower age limit:\c"
+read lage
+echo -e "enter higher age limit:\c"
+read gage
+i=$lage
+while [ $i -le $gage ] 
+do 
+   cat $file | grep -w $i
+   i=` expr $i + 1 ` 
+done
+
+output
+========
+enter file name:taskfile
+taskfile is present
+enter lower age limit:18
+enter higher age limit:30
+sanjay age-18 sanja@20gmail.com
+babu age-18 babu@gmail.com
+dheeraj thuniki age-20 dheeraj@gmail.com
+manju age-20 manju@gmail.com
+muna age-25 muna@gmail.com
+vishnu age-30 vishnu@gmail.com
+sanju age-30 san@gmail.com
+
+=======================================================================================================================================================================
+6. Write a shell script that takes a directory path and an extension as input and creates a backup of all files in the directory that have the specified extension. 
+          The script should create a new directory named "backup" in the same directory as the original files and copy all files with the specified extension to the backup directory. 
+          If the backup directory already exists, the script should prompt the user to confirm whether to overwrite it or not.(Using Functions)
+
+#! /bin/bash
+echo -e "enter directory path:\c"
+read dir1
+echo -e "enter file extension:\c"
+read ext1
+cd $dir1
+fun() {
+    d=$(find $dir1 -type f -name "*$ext1")
+    sudo cp $d ./backup 
+}
+if [ -d backup ]
+then
+ echo -e "backup directory is already exist can i override it (YES/NO):\c"
+ read a
+  if [ $a == "YES" ] 
+   then 
+   cd backup/
+   sudo rm -f *$ext1
+   cd ..
+   fun
+  else
+  echo "same name files are present "
+  exit
+ fi
+else 
+  echo "backup directory is not present so creating the directory "
+   sudo mkdir backup
+  fun
+ fi
+
+output
+=========
+
+enter directory path:/home/vboxuser/taskdir
+enter file extension:.txt
+backup directory is already exist can i override it (YES/NO):YES
+files are copied to backup dir
+
+======================================================================================================================================================================
+
+7. Write a shell script that takes a list of file paths as input and creates a compressed archive of all the files. 
+   The script should prompt the user to specify the compression format (zip or tar), and the archive name.
+    The script should also display the size of the original and compressed files and the compression ratio.
+
+#! /bin/bash
+echo -e "enter the directory path :\c"
+read dir1
+echo -e "enter specify the compression format (zip or tar):\c"
+read ext 
+echo -e "enter the archive filename:\c"
+read filename
+if [ $ext == "zip" ]
+ then 
+ echo "the files are zip"
+ d=$(du -h $dir1)
+ echo "before zip the file size is :$d"
+  sudo zip -r $dir1/$filename $dir1/*
+ a=$(du -h $dir1/$filename)
+ echo "after zip the file size is :$a"
+
+elif [ $ext == "tar" ]
+  then
+  echo "the files are tar"
+  d=$(du -h $dir1)
+ echo "before tar the file size is :$d"
+  sudo tar cf $dir1/$filename $dir1/*
+  a=$(du -h $dir1/$filename)
+ echo "after tar the file size is :$a"
+  
+else 
+  ehco "u entered a wrong statement"
+fi 
+
+output
+========
+enter the directory path :/home/vboxuser/zip
+enter specify the compression format (zip or tar):zip
+enter the archive filename:new.zip
+the files are zip
+before zip the file size is :40K        /home/vboxuser/zip
+  adding: home/vboxuser/zip/file1 (deflated 31%)
+  adding: home/vboxuser/zip/file2 (deflated 46%)
+  adding: home/vboxuser/zip/file3 (deflated 42%)
+  adding: home/vboxuser/zip/file4 (deflated 19%)
+  adding: home/vboxuser/zip/s.tar (deflated 97%)
+after zip the file size is :4.0K        /home/vboxuser/zip/new.zip
+=================================================================================================================================================================================
+
+8. How will you debug a script if you have made any mistakes in a already written script?
+
+we can debug the script by using 
+set -x in the script 
+
+#! /bin/bash
+echo -e "enter file name:\c"
+read file
+echo -e "enter word:\c"
+read word
+set -x
+if [ -f $file]
+then
+ehco "file is present"
+cat $file
+grep -v -i $word $file > test
+mv test $file
+echo "word is deleted from $file"
+cat $file
+set +x
+else 
+  echo "you entere the wrong file"
+
+fi
+
+output
+========
+enter file name:/home/vboxuser/shellscript/file2
+enter word:world
++ '[' -f '/home/vboxuser/shellscript/file2]'
+delword.sh: line 7: [: missing `]'
++ echo 'you entere the wrong file'
+yuo entere the wrong file
+
+
+=======================================================================================================================================================================
+
+9. Write a shell script that deletes all lines containing a specified word in one or more files supplied as arguments to it?
+
+#! /bin/bash
+echo -e "enter file name:\c"
+read file
+echo -e "enter word:\c"
+read word
+if [ -f $file ]
+then
+ehco "file is present"
+cat $file
+grep -v -i $word $file > test
+mv test $file
+echo "word is deleted from $file"
+cat $file
+else 
+  echo "you entere the wrong file"
+
+fi
+
+output
+=========
+
+enter file name:/home/vboxuser/shellscript/file2
+enter word:world
+file is present
+
+howww
+that 
+hai
+hello world
+ext
+world is dangerious
+
+word is deleted from /home/vboxuser/shellscript/file2
+
+howww
+that 
+hai
+ext
+=======================================================================================================================================================================
+10. How to schedule cronjobs for running any script like backup of logs?
+
+to check cronjobs
+#crontab -l
+
+to create cronjobs
+#crontab -e
+
+* 1 * * * /home/vboxuser/taskdir/backuptask.sh 
+every night 1 am the cronjob trigger the backuptask.sh shell script
+=========================================================================================================================================================================
