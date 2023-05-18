@@ -1,0 +1,10 @@
+FROM ubuntu
+USER root
+RUN apt-get update -y
+RUN apt install wget -y
+RUN apt install openjdk-11-jdk -y
+RUN wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.73/bin/apache-tomcat-9.0.73.tar.gz
+RUN tar -xvzf apache-tomcat-9.0.73.tar.gz
+ADD https://updates.jenkins.io/download/war/2.394/jenkins.war /apache-tomcat-9.0.73/webapps/
+EXPOSE 8080
+CMD ["/apache-tomcat-9.0.73/bin/catalina.sh", "run"]
