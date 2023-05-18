@@ -1,0 +1,13 @@
+---
+# vars file for ec2
+    instance_type: "t2.micro"
+    ami: "ami-09ba48996007c8b50"
+    key_name: "Demokeypair"
+    region: "ap-south-1"
+    tag_name: "none"
+    count: "none"
+    access_key: "none"
+    secret_access_key: "none"
+    subnet_id: "subnet-00fc5aea8d6c664f9"
+    security_group: "public_sg"
+

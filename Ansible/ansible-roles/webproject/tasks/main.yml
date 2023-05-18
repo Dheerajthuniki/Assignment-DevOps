@@ -1,0 +1,55 @@
+---
+# tasks file for webproject
+- name: yum update
+  yum:
+    name: "*"
+    state: present 
+- name: installing nodejs  and npm package
+  command: yum install -y gcc-c++ make  
+- name: installing nodejs  and npm package
+  shell: curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
+  become: true
+- name: install the packages
+  yum:
+    name: nodejs
+    state: present
+- name: install the packages
+  yum:
+    name: git
+    state: present
+- name: git clone
+  git:
+    repo: https://github.com/Dheerajthuniki/project-amazona-git.git
+    dest: /home/ec2-user/project/
+    clone: yes
+- name: copying the .env file 
+  copy: 
+     src: .env 
+     dest: /home/ec2-user/project/mern-amazona-master/backend/.env
+- name: install npm in frontend
+  command: npm install 
+  args:
+    chdir: /home/ec2-user/project/mern-amazona-master/frontend/
+  become: true
+
+- name: start the npm in frontend
+  command: npm start &
+  args: 
+     chdir: /home/ec2-user/project/mern-amazona-master/frontend/
+  async: 300
+  poll: 0
+  become: true
+- name: install the npm in backend 
+  command: npm install 
+  args:
+    chdir: /home/ec2-user/project/mern-amazona-master/backend/
+  become: true
+
+- name: start the npm in backend
+  command: npm start & 
+  args:
+     chdir: /home/ec2-user/project/mern-amazona-master/backend/
+  async: 300
+  poll: 0
+  become: true
+

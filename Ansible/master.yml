@@ -1,0 +1,14 @@
+- hosts: localhost
+  vars_files:
+     - key.yml
+  roles:
+  - role: ec2
+    tag_name: "projectweb"
+    count: 1
+    access_key: "{{ akey }}"
+    secret_access_key: "{{ skey }}"
+    
+- hosts: tag_Name_projectweb
+  become: true
+  roles:
+  - webserver

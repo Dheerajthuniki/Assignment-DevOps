@@ -1,0 +1,42 @@
+---
+# tasks file for webserver
+- name: yum update
+  yum:
+    name: "*"
+    state: present 
+- name: installing nodejs  and npm package
+  command: yum install -y gcc-c++ make  
+- name: installing nodejs  and npm package
+  shell: curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
+  become: true
+- name: install the packages
+  yum:
+    name: nodejs
+    state: present
+
+
+- name: install the packages
+  yum:
+    name: git
+    state: present
+- name: git clone
+  git:
+    repo: https://github.com/Dheerajthuniki/project-code.git
+    dest: /opt/project_lms/
+    clone: yes
+- name: start the project npm
+  command: npm install
+  args:
+    chdir: /opt/project_lms/
+  become: true
+
+- name: start the project npm
+  command: npm start
+  args: 
+     chdir: /opt/project_lms/
+       #async: 30
+  become: true
+
+      
+    
+
